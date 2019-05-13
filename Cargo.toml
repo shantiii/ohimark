@@ -5,3 +5,4 @@ authors = ["Shanti Chellaram <shanti@shanti.im>"]
 edition = "2018"
 
 [dependencies]
+pulldown-cmark = "0.5.1"
