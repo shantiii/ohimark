@@ -4,13 +4,35 @@ use pulldown_cmark::{Parser, Event, Tag};
 
 /* Prints the first (h1) title of a markdown document */
 
+#[derive(Debug)]
+enum RunMode {
+    Title,
+    Dump
+}
+
 fn main() -> Result<()> {
+    let query_str = std::env::args().nth(1).unwrap_or(String::new());
+    let mode =
+        match query_str.as_ref() {
+            "title" => RunMode::Title,
+            _ => RunMode::Dump
+        };
+    dbg!(&mode);
     let mut markdown_input: String = String::from("");
     stdin().lock().read_to_string(&mut markdown_input)?;
 
     let mut parser = Parser::new(&markdown_input);
-    let title = parse_title(&mut parser).unwrap_or(String::from(""));
-    println!("{}", title);
+    match mode {
+        RunMode::Title => {
+            let title = parse_title(&mut parser).unwrap_or(String::from(""));
+            println!("{}", title);
+        },
+        RunMode::Dump => {
+            for event in parser {
+                dbg!(event);
+            }
+        }
+    }
     Ok(())
 }
 
